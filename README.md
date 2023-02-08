@@ -10,6 +10,9 @@ Usage (after building it and adding to your classpath):
 
 ```kotlin
 import com.gitlab.silmeth.pocztowka.Postcard
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.decodeFromByteArray
 
 // …
 @Serializable
@@ -17,7 +20,10 @@ data class Foo(val i: Int, val s: String)
 
 val postcard = Postcard()
 
+val foo = Foo(1, "foo")
+// serialization
 val bytes = postcard.encodeToByteArray(foo)
+// deserialization
 val deserialized: Foo = postcard.decodeFromByteArray(bytes)
 ```
 
