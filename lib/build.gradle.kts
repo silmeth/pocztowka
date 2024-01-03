@@ -1,3 +1,5 @@
+import org.gradle.api.publish.maven.MavenPublication
+
 plugins {
     kotlin("multiplatform") version "1.9.22"
     kotlin("plugin.serialization") version "1.9.22"
@@ -5,14 +7,17 @@ plugins {
     id("maven-publish")
 }
 
+group = "com.gitlab.silmeth"
+version = "0.1.0"
+
 repositories {
     mavenCentral()
     mavenLocal()
 }
 
-group = "com.gitlab.silmeth"
-
 kotlin {
+    withSourcesJar(publish = true)
+
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "17"
@@ -27,13 +32,7 @@ kotlin {
             }
         }
     }
-    // ios()
-    // iosSimulatorArm64()
-    // tvos()
-    // watchos()
-    // macosX64()
-    // macosArm64()
-    // mingwX64()
+
     linuxX64()
 
     fun kotlinx(name: String, version: String): String = "org.jetbrains.kotlinx:kotlinx-$name:$version"
@@ -69,13 +68,12 @@ kotlin {
     }
 }
 
-// publishing {
-//     publications {
-//         register<MavenPublication>("mavenJava") {
-//             artifactId = "pocztowka"
-//             version = "0.1.1"
-//             from(components["java"])
-//             artifact(sourceJar)
-//         }
-//     }
-// }
+publishing {
+    publications.withType<MavenPublication> {
+        if (name == "kotlinMultiplatform") {
+            setArtifactId("pocztowka")
+        } else {
+            setArtifactId("pocztowka-$name")
+        }
+    }
+}

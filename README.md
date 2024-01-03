@@ -29,7 +29,7 @@ val deserialized: Foo = postcard.decodeFromByteArray(bytes)
 
 It does support non-zig-zag serialization and deserialization of Kotlin unsigned types (`UShort`, `UInt`, `ULong`) by default as opposed to zig-zaged signed integers.
 
-There are some tests in [`PostcardDecoderTest`](lib/src/test/kotlin/com/gitlab/silmeth/pocztowka/PostcardDecoderTest.kt) and [`PostcardEncoderTest`](lib/src/test/kotlin/com/gitlab/silmeth/pocztowka/PostcardEncoderTest.kt).
+There are some tests in [`PostcardDecoderTest`](lib/src/commonTest/kotlin/com/gitlab/silmeth/pocztowka/PostcardDecoderTest.kt) and [`PostcardEncoderTest`](lib/src/commonTest/kotlin/com/gitlab/silmeth/pocztowka/PostcardEncoderTest.kt).
 
 The library compiles for JVM, Linux x64, and JS targets and successfully finishes tests on them.
 
