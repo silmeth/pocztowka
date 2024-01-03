@@ -95,7 +95,7 @@ class PostcardEncoder(
     override fun encodeChar(value: Char) = encodeString(value.toString())
 
     override fun encodeString(value: String) {
-        val asUtf8 = value.toByteArray(Charsets.UTF_8)
+        val asUtf8 = value.encodeToByteArray()
         encodeUInt(asUtf8.size.toUInt())
         buffer.append(asUtf8)
     }

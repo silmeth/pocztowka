@@ -23,7 +23,6 @@ group = "com.gitlab.silmeth"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2")
 }
 

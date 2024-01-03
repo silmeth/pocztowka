@@ -9,11 +9,12 @@ internal class ByteArrayView(
         require(startIdx >= 0 && endIdx <= array.size)
     }
 
-    fun decodeString(length: Int): String = if (length <= this.size) {
-        array.decodeToString(startIdx, startIdx + length)
-    } else {
-        throw IndexOutOfBoundsException()
-    }
+    fun decodeString(length: Int): String =
+        if (length <= this.size) {
+            array.decodeToString(startIdx, startIdx + length, throwOnInvalidSequence = true)
+        } else {
+            throw IndexOutOfBoundsException()
+        }
 
     operator fun get(idx: Int): Byte {
         val targetIdx = startIdx + idx
@@ -35,5 +36,6 @@ internal class ByteArrayView(
         }
     }
 
-    val size: Int get() = endIdx - startIdx
+    val size: Int
+        get() = endIdx - startIdx
 }
