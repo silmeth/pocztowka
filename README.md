@@ -31,8 +31,9 @@ It does support non-zig-zag serialization and deserialization of Kotlin unsigned
 
 There are some tests in [`PostcardDecoderTest`](lib/src/test/kotlin/com/gitlab/silmeth/pocztowka/PostcardDecoderTest.kt) and [`PostcardEncoderTest`](lib/src/test/kotlin/com/gitlab/silmeth/pocztowka/PostcardEncoderTest.kt).
 
+The library compiles for JVM, Linux x64, and JS targets and successfully finishes tests on them.
+
 ### Current restrictions
-* JVM-only – the library was developed using Kotlin JVM and currently does not support Kotlin/Native or Kotlin/JS.
 * Polymorphism – polymorphic types marked as `@Serializable` can be serialized and deserialized but the format is not compatible with Rust’s data-carrying enums as the type/variant is by default serialized as a string with the full type’s path, and can be customized to any string – but `postcard` in Rust typically writes the variant discriminator as an unsigned integer.
 * Arrays – in Rust arrays are statically-sized, so data formats containing fixed-sized arrays can be serialized without any array size tag. In Kotlin `Array`s are dynamically-sized and thus they behave like `List`s for serialization, serializing their number of elements first. If you need Rust-like behaviour, you can just explicitly list all elements as separate fields in your structure (instead of using array), or write a custom serializer for it.
 * Flavors – the Rust library supports “flavors” which is a term for middleware processing the input or output of the serializator on the fly (compressing it, calculating and adding crc checksums, etc.). Nothing like that is implemented here (to achieve the same, you need to pass the data through a separate processing stage yourself).

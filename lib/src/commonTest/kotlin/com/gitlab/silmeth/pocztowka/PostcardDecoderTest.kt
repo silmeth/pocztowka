@@ -173,7 +173,8 @@ class PostcardDecoderTest {
             )
         val expected = -32.005859375f
         val result = postcardDecode<Float>(input)
-        assertEquals(expected, result)
+
+        assertFloatsEqual(expected, result)
     }
 
     @Test
