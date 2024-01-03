@@ -3,7 +3,10 @@ package com.gitlab.silmeth.pocztowka
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
 
 class PostcardEncoderTest {
     @Test
@@ -244,12 +247,35 @@ class PostcardEncoderTest {
         assertEquals(expected, result.toList())
     }
 
-    // @Test
-    // fun shouldSerializePolymorphic() {
-    //     val result = postcardEncode(FooBar.Bar(0x69.toUInt()) as FooBar)
-    //     println(result.toList().map { it.toUInt().toString(16) })
-    //     assertEquals(1, 2)
-    // }
+    @Test
+    fun shouldSerializePolymorphic() {
+        val result = postcardEncode(FooBar.Bar(0x69.toUInt()) as FooBar)
+        println(result.toList().map { it.toUInt().toString(16) })
+
+        val expected: List<Byte> =
+            listOf(FooBar.BAR_NAME.length.toByte()) +
+                FooBar.BAR_NAME.map { it.code.toByte() } +
+                listOf(0x69)
+
+        assertEquals(
+            expected,
+            result.toList(),
+        )
+        val deserialized: FooBar = postcardDecode(result)
+        assertEquals(FooBar.Bar(0x69.toUInt()), deserialized)
+    }
+
+    @Test
+    fun docTest() {
+        @Serializable data class Foo(val i: Int, val s: String)
+
+        val postcard = Postcard()
+
+        val foo = Foo(1, "foo")
+        val bytes = postcard.encodeToByteArray(foo)
+        val deserialized: Foo = postcard.decodeFromByteArray(bytes)
+        println(deserialized)
+    }
 
     @Serializable data class Struct(val bytes: ByteArray, val str: String)
     @Serializable
@@ -260,9 +286,13 @@ class PostcardEncoderTest {
         D,
     }
 
-    // @Serializable
-    // sealed class FooBar {
-    //     @Serializable data class Foo(val foo: String) : FooBar()
-    //     @Serializable data class Bar(val bar: UInt) : FooBar()
-    // }
+    @Serializable
+    sealed class FooBar {
+        @Serializable data class Foo(val foo: String) : FooBar()
+        @Serializable @SerialName(BAR_NAME) data class Bar(val bar: UInt) : FooBar()
+
+        companion object {
+            const val BAR_NAME: String = "FancyBarType"
+        }
+    }
 }
