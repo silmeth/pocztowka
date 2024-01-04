@@ -13,7 +13,7 @@ internal class ByteArrayView(
         if (length <= this.size) {
             array.decodeToString(startIdx, startIdx + length, throwOnInvalidSequence = true)
         } else {
-            throw IndexOutOfBoundsException()
+            throw IndexOutOfBoundsException("Length $length outside of array size ${this.size}")
         }
 
     operator fun get(idx: Int): Byte {
@@ -21,7 +21,7 @@ internal class ByteArrayView(
         return if (idx >= 0 && targetIdx < endIdx) {
             array[targetIdx]
         } else {
-            throw IndexOutOfBoundsException()
+            throw IndexOutOfBoundsException("Index $idx outside of array size ${this.size}")
         }
     }
 
@@ -32,7 +32,9 @@ internal class ByteArrayView(
         return if (from <= to && targetFrom >= 0 && targetTo <= endIdx) {
             ByteArrayView(array, targetFrom, targetTo)
         } else {
-            throw IndexOutOfBoundsException()
+            throw IndexOutOfBoundsException(
+                "Indices [$from, $to) outside of array size ${this.size}"
+            )
         }
     }
 

@@ -1,6 +1,5 @@
 package com.gitlab.silmeth.pocztowka
 
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.AbstractEncoder
@@ -134,7 +133,7 @@ class PostcardEncoder(
     override fun beginStructure(descriptor: SerialDescriptor): PostcardEncoder = this
 
     override fun encodeValue(value: Any) {
-        throw SerializationException("Unsupported type")
+        throw SerializationException.UnsupportedType()
     }
 
     fun toBytes(): ByteArray = buffer.toArray()

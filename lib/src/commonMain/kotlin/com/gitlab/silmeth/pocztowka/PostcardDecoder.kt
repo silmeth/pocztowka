@@ -1,7 +1,6 @@
 package com.gitlab.silmeth.pocztowka
 
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
@@ -34,7 +33,7 @@ class PostcardDecoder(
         return if (tmp in Short.MIN_VALUE..Short.MAX_VALUE) {
             tmp.toShort()
         } else {
-            throw SerializationException("Value $tmp does not fit in Short")
+            throw DeserializationException.OutOfBounds(tmp, "Short")
         }
     }
 
@@ -43,7 +42,7 @@ class PostcardDecoder(
         return if (tmp in UShort.MIN_VALUE..UShort.MAX_VALUE) {
             tmp.toUShort()
         } else {
-            throw SerializationException("Value $tmp does not fit in UShort")
+            throw DeserializationException.OutOfBounds(tmp.toLong(), "UShort", unsigned = true)
         }
     }
 
@@ -52,7 +51,7 @@ class PostcardDecoder(
         return if (tmp in Int.MIN_VALUE..Int.MAX_VALUE) {
             tmp.toInt()
         } else {
-            throw SerializationException("Value $tmp does not fit in Int")
+            throw DeserializationException.OutOfBounds(tmp, "Int")
         }
     }
 
@@ -61,7 +60,7 @@ class PostcardDecoder(
         return if (tmp in UInt.MIN_VALUE..UInt.MAX_VALUE) {
             tmp.toUInt()
         } else {
-            throw SerializationException("Value $tmp does not fit in UInt")
+            throw DeserializationException.OutOfBounds(tmp.toLong(), "UInt", unsigned = true)
         }
     }
 
@@ -117,7 +116,8 @@ class PostcardDecoder(
         when (val marker = bite()) {
             0x01.toByte() -> true
             0x00.toByte() -> false
-            else -> throw SerializationException("Wrong null-marker $marker")
+            else ->
+                throw DeserializationException.UnexpectedValue("Null marker (0x00 or 0x01)", marker)
         }
 
     override fun decodeInline(descriptor: SerialDescriptor): Decoder =
@@ -143,7 +143,7 @@ class PostcardDecoder(
     override fun decodeCollectionSize(descriptor: SerialDescriptor): Int = decodeUInt().toInt()
 
     override fun decodeValue(): Any {
-        throw SerializationException("Unsupported type")
+        throw SerializationException.UnsupportedType()
     }
 
     override fun decodeEnum(enumDescriptor: SerialDescriptor): Int = decodeUInt().toInt()
