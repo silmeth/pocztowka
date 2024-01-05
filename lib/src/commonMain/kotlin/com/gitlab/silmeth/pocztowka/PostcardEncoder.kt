@@ -20,7 +20,6 @@ inline fun <reified T> postcardEncode(value: T): ByteArray {
 }
 
 // TODO: polymorphism
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 class PostcardEncoder(
     val unsigned: Boolean = false,
     override val serializersModule: SerializersModule,

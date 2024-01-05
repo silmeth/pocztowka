@@ -18,7 +18,6 @@ inline fun <reified T> postcardDecode(bytes: ByteArray): T {
     return decoder.decodeSerializableValue(decoder.serializersModule.serializer())
 }
 
-@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 class PostcardDecoder(
     input: ByteArray,
     override val serializersModule: SerializersModule,
@@ -110,14 +109,16 @@ class PostcardDecoder(
         return result
     }
 
-    override fun decodeNotNullMark(): Boolean = decodeBoolean()
+    override fun decodeNotNullMark(): Boolean = decodeBoolean("Null marker")
 
-    override fun decodeBoolean(): Boolean =
+    override fun decodeBoolean(): Boolean = decodeBoolean("Boolean")
+
+    private fun decodeBoolean(name: String): Boolean =
         when (val marker = bite()) {
             0x01.toByte() -> true
             0x00.toByte() -> false
             else ->
-                throw DeserializationException.UnexpectedValue("Null marker (0x00 or 0x01)", marker)
+                throw DeserializationException.UnexpectedValue("$name (0x00 or 0x01)", marker)
         }
 
     override fun decodeInline(descriptor: SerialDescriptor): Decoder =
